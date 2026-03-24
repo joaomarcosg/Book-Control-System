@@ -1,11 +1,18 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/joaomarcosg/Book-Control-System/internal/users/models"
+)
 
-type UserController struct{}
+type UserController struct {
+	userService models.UserService
+}
 
-func NewUserController() *UserController {
-	return &UserController{}
+func NewUserController(userService models.UserService) *UserController {
+	return &UserController{
+		userService: userService,
+	}
 }
 
 func (c *UserController) RegisterRoutes(r *gin.Engine) {
