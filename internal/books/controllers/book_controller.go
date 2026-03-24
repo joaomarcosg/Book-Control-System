@@ -8,7 +8,7 @@ func NewBooksController() *BooksController {
 	return &BooksController{}
 }
 
-func (b *BooksController) RegisterRoutes(r *gin.RouterGroup) {
+func (b *BooksController) RegisterRoutes(r *gin.Engine) {
 	users := r.Group("/books")
 
 	{
