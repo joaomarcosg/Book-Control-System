@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${BOOK_CONTROL_SYSTEM_USER}
+      POSTGRES_PASSWORD: ${BOOK_CONTROL_SYSTEM_PASSWORD}
+      POSTGRES_DB: ${BOOK_CONTROL_SYSTEM_DATABASE_NAME}
+    ports:
+      - ${BOOK_CONTROL_SYSTEM_DATABASE_PORT:-5432}:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
+    driver: local
