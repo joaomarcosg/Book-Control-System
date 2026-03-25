@@ -1,11 +1,18 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/joaomarcosg/Book-Control-System/internal/books/models"
+)
 
-type BooksController struct{}
+type BooksController struct {
+	bookService models.BookService
+}
 
-func NewBooksController() *BooksController {
-	return &BooksController{}
+func NewBooksController(bookService models.BookService) *BooksController {
+	return &BooksController{
+		bookService: bookService,
+	}
 }
 
 func (b *BooksController) RegisterRoutes(r *gin.Engine) {
