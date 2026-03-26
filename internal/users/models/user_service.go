@@ -1,7 +1,7 @@
 package models
 
 type UserService interface {
-	CreateUser(user *User) error
+	CreateUser(user *User) (*User, error)
 	GetUser(id int64) (*User, error)
 	GetAllUsers() ([]*User, error)
 	UpdateUser(id int64, user *User) error
