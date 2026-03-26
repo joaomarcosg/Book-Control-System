@@ -1,11 +1,18 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/joaomarcosg/Book-Control-System/internal/loans/models"
+)
 
-type LoanController struct{}
+type LoanController struct {
+	loanService models.LoanService
+}
 
-func NewLoanController() *LoanController {
-	return &LoanController{}
+func NewLoanController(loanService models.LoanService) *LoanController {
+	return &LoanController{
+		loanService: loanService,
+	}
 }
 
 func (l *LoanController) RegisterRoutes(r *gin.Engine) {
