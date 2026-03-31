@@ -1,9 +1,11 @@
 package models
 
+import "context"
+
 type UserService interface {
-	CreateUser(user *User) (*User, error)
-	GetUser(id int64) (*User, error)
-	GetAllUsers() ([]*User, error)
-	UpdateUser(id int64, user *User) error
-	DeleteUser(id int64) error
+	CreateUser(ctx context.Context, user *User) (*User, error)
+	GetUser(ctx context.Context, id int64) (*User, error)
+	GetAllUsers(ctx context.Context) ([]*User, error)
+	UpdateUser(ctx context.Context, id int64, user *User) error
+	DeleteUser(ctx context.Context, id int64) error
 }
