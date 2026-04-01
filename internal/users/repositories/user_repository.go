@@ -2,8 +2,14 @@ package repositories
 
 import (
 	"context"
+	"errors"
 
 	"github.com/joaomarcosg/Book-Control-System/internal/users/models"
+)
+
+var (
+	ErrDuplicateUserEmail = errors.New("user email already exists")
+	ErrUserNotFound       = errors.New("user not found")
 )
 
 type UserRepository interface {
