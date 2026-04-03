@@ -4,10 +4,10 @@ INSERT INTO users (
     email
 )
 VALUES ($1, $2)
-RETURNING id, name, email, created_at, updated_at;
+RETURNING id;
 
 -- name: GetUser :one
-SELECT id, name, email, created_at
+SELECT id, name, email, created_at, updated_at
 FROM users
 WHERE id = $1;
 
