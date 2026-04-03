@@ -13,7 +13,7 @@ var (
 )
 
 type UserRepository interface {
-	CreateUser(ctx context.Context, user *models.User) (*models.User, error)
+	CreateUser(ctx context.Context, user *models.User) (int64, error)
 	GetUser(ctx context.Context, id int64) (*models.User, error)
 	GetAllUsers(ctx context.Context) ([]*models.User, error)
 	UpdateUser(ctx context.Context, id int64, user *models.User) error
