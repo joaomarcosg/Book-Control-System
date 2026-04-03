@@ -3,7 +3,7 @@ package models
 import "context"
 
 type UserService interface {
-	CreateUser(ctx context.Context, user *User) (*User, error)
+	CreateUser(ctx context.Context, user *User) (int64, error)
 	GetUser(ctx context.Context, id int64) (*User, error)
 	GetAllUsers(ctx context.Context) ([]*User, error)
 	UpdateUser(ctx context.Context, id int64, user *User) error
