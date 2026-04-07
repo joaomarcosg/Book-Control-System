@@ -62,9 +62,33 @@ func (u *userRepository) GetAllUsers(ctx context.Context) ([]*models.User, error
 }
 
 func (u *userRepository) UpdateUser(ctx context.Context, id int64, user *models.User) error {
-	panic("unimplemented")
+
+	params := toUpdateParams(id, user)
+
+	_, err := u.queries.UpdateUser(ctx, params)
+
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return ErrUserNotFound
+		}
+		return err
+	}
+
+	return nil
+
 }
 
 func (u *userRepository) DeleteUser(ctx context.Context, id int64) error {
-	panic("unimplemented")
+
+	err := u.queries.DeleteUser(ctx, int32(id))
+
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return ErrUserNotFound
+		}
+		return err
+	}
+
+	return nil
+
 }
