@@ -29,6 +29,14 @@ func toCreateParams(u *models.User) sqlc.CreateUserParams {
 	}
 }
 
+func toUpdateParams(u *models.User) sqlc.UpdateUserParams {
+	return sqlc.UpdateUserParams{
+		ID:    int32(u.ID),
+		Name:  u.Name,
+		Email: u.Email,
+	}
+}
+
 func toDomain(u sqlc.User) *models.User {
 	return mapToDomain(
 		u.ID,
