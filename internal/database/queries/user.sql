@@ -19,8 +19,8 @@ ORDER BY id;
 -- name: UpdateUser :one
 UPDATE users
 SET
-    name = COALESCE($2, name),
-    email = COALESCE($3, email)
+    name = $2,
+    email = $3
 WHERE id = $1
 RETURNING id, name, email, created_at, updated_at;
 
