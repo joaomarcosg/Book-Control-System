@@ -2,9 +2,11 @@ package services
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/joaomarcosg/Book-Control-System/internal/users/models"
+	"github.com/joaomarcosg/Book-Control-System/internal/users/repositories"
 )
 
 type MockUserRepository struct {
@@ -60,4 +62,27 @@ func TestCreateUser_Success(t *testing.T) {
 	if id != expectedID {
 		t.Fatalf("expected %v, got %v", expectedID, id)
 	}
+}
+
+func TestCreateUser_Duplicate(t *testing.T) {
+
+	mockUserRepository := &MockUserRepository{
+		CreateUserFn: func(ctx context.Context, user *models.User) (int64, error) {
+			return 0, repositories.ErrDuplicateUserNameOrEmail
+		},
+	}
+
+	service := NewUserService(mockUserRepository)
+
+	newUser := &models.User{
+		Name:  "John Doe",
+		Email: "johndoe@email.com",
+	}
+
+	_, err := service.CreateUser(context.Background(), newUser)
+
+	if !errors.Is(err, repositories.ErrDuplicateUserNameOrEmail) {
+		t.Fatalf("expected duplicate error, got %v", err)
+	}
+
 }
