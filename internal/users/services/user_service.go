@@ -29,15 +29,23 @@ func (u *UserService) CreateUser(ctx context.Context, user *models.User) (int64,
 
 }
 
+func (u *UserService) GetUser(ctx context.Context, id int64) (*models.User, error) {
+
+	user, err := u.userRepo.GetUser(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+
+}
+
 func (u *UserService) DeleteUser(ctx context.Context, id int64) error {
 	panic("unimplemented")
 }
 
 func (u *UserService) GetAllUsers(ctx context.Context) ([]*models.User, error) {
-	panic("unimplemented")
-}
-
-func (u *UserService) GetUser(ctx context.Context, id int64) (*models.User, error) {
 	panic("unimplemented")
 }
 
