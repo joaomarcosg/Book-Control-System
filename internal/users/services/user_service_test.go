@@ -3,7 +3,9 @@ package services
 import (
 	"context"
 	"errors"
+	"reflect"
 	"testing"
+	"time"
 
 	"github.com/joaomarcosg/Book-Control-System/internal/users/models"
 	"github.com/joaomarcosg/Book-Control-System/internal/users/repositories"
@@ -85,4 +87,38 @@ func TestCreateUser_Duplicate(t *testing.T) {
 		t.Fatalf("expected duplicate error, got %v", err)
 	}
 
+}
+
+func TestGetUser_Success(t *testing.T) {
+	expectedUser := &models.User{
+		ID:        1,
+		Name:      "John Doe",
+		Email:     "johndoe@email.com",
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	mockUserRepository := &MockUserRepository{
+		GetUserFn: func(ctx context.Context, id int64) (*models.User, error) {
+			return &models.User{
+				ID:        expectedUser.ID,
+				Name:      expectedUser.Name,
+				Email:     expectedUser.Email,
+				CreatedAt: expectedUser.CreatedAt,
+				UpdatedAt: expectedUser.UpdatedAt,
+			}, nil
+		},
+	}
+
+	service := NewUserService(mockUserRepository)
+
+	user, err := service.GetUser(context.Background(), 1)
+
+	if err != nil {
+		t.Fatalf("unexpected erro %v", err)
+	}
+
+	if !reflect.DeepEqual(user, expectedUser) {
+		t.Fatalf("expected %v, got %v", expectedUser, user)
+	}
 }
