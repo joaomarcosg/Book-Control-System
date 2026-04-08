@@ -122,3 +122,29 @@ func TestGetUser_Success(t *testing.T) {
 		t.Fatalf("expected %v, got %v", expectedUser, user)
 	}
 }
+
+func TestGetUser_UserNotFound(t *testing.T) {
+	var id int64 = 1
+	mockUserRepository := &MockUserRepository{
+		GetUserFn: func(ctx context.Context, id int64) (*models.User, error) {
+			return nil, repositories.ErrUserNotFound
+		},
+	}
+
+	service := NewUserService(mockUserRepository)
+
+	user, err := service.GetUser(context.Background(), id)
+
+	if err == nil {
+		t.Fatalf("expected error, got nil")
+	}
+
+	if !errors.Is(err, repositories.ErrUserNotFound) {
+		t.Fatalf("expected ErrUserNotFound, got %v", err)
+	}
+
+	if user != nil {
+		t.Fatalf("expected nil, got %v", user)
+	}
+
+}
