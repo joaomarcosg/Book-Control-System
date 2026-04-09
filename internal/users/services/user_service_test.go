@@ -148,3 +148,40 @@ func TestGetUser_UserNotFound(t *testing.T) {
 	}
 
 }
+
+func TestGetAllUsers_Success(t *testing.T) {
+	expectedUsers := []*models.User{
+		{
+			ID:        1,
+			Name:      "John Doe",
+			Email:     "johndoe@email.com",
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+		{
+			ID:        2,
+			Name:      "Anne Frank",
+			Email:     "annefranke@email.com",
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+	}
+
+	mockUserRepository := &MockUserRepository{
+		GetAllUsersFn: func(ctx context.Context) ([]*models.User, error) {
+			return expectedUsers, nil
+		},
+	}
+
+	service := NewUserService(mockUserRepository)
+
+	users, err := service.GetAllUsers(context.Background())
+
+	if err != nil {
+		t.Fatalf("unexpected erro %v", err)
+	}
+
+	if len(users) < len(expectedUsers) {
+		t.Fatalf("expected %v, got %v", expectedUsers, users)
+	}
+}
