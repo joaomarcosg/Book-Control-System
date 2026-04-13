@@ -149,21 +149,23 @@ func TestGetUser_UserNotFound(t *testing.T) {
 
 }
 
-func TestGetAllUsers_Success(t *testing.T) {
+func TestGetAllUsers_ShouldReturnUsers_WhenRepositorySucceeds(t *testing.T) {
+	fixedTime := time.Date(2026, 4, 12, 14, 0, 0, 0, time.UTC)
+
 	expectedUsers := []*models.User{
 		{
 			ID:        1,
 			Name:      "John Doe",
 			Email:     "johndoe@email.com",
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
+			CreatedAt: fixedTime,
+			UpdatedAt: fixedTime,
 		},
 		{
 			ID:        2,
 			Name:      "Anne Frank",
 			Email:     "annefranke@email.com",
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
+			CreatedAt: fixedTime,
+			UpdatedAt: fixedTime,
 		},
 	}
 
@@ -181,7 +183,7 @@ func TestGetAllUsers_Success(t *testing.T) {
 		t.Fatalf("unexpected erro %v", err)
 	}
 
-	if len(users) < len(expectedUsers) {
-		t.Fatalf("expected %v, got %v", expectedUsers, users)
+	if !reflect.DeepEqual(users, expectedUsers) {
+		t.Errorf("expected %v, got %v", expectedUsers, users)
 	}
 }
