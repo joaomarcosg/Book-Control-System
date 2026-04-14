@@ -17,31 +17,36 @@ type MockUserRepository struct {
 	GetAllUsersFn func(ctx context.Context) ([]*models.User, error)
 	UpdateUserFn  func(ctx context.Context, id int64, user *models.User) error
 	DeleteUserFn  func(ctx context.Context, id int64) error
-	Called        bool
+
+	CreateUserCalled  bool
+	GetUserCalled     bool
+	GetAllUsersCalled bool
+	UpdateUserCalled  bool
+	DeleteUserCalled  bool
 }
 
 func (m *MockUserRepository) CreateUser(ctx context.Context, user *models.User) (int64, error) {
-	m.Called = true
+	m.CreateUserCalled = true
 	return m.CreateUserFn(ctx, user)
 }
 
 func (m *MockUserRepository) GetUser(ctx context.Context, id int64) (*models.User, error) {
-	m.Called = true
+	m.GetUserCalled = true
 	return m.GetUserFn(ctx, id)
 }
 
 func (m *MockUserRepository) GetAllUsers(ctx context.Context) ([]*models.User, error) {
-	m.Called = true
+	m.GetAllUsersCalled = true
 	return m.GetAllUsersFn(ctx)
 }
 
 func (m *MockUserRepository) UpdateUser(ctx context.Context, id int64, user *models.User) error {
-	m.Called = true
+	m.UpdateUserCalled = true
 	return m.UpdateUserFn(ctx, id, user)
 }
 
 func (m *MockUserRepository) DeleteUser(ctx context.Context, id int64) error {
-	m.Called = true
+	m.DeleteUserCalled = true
 	return m.DeleteUserFn(ctx, id)
 }
 
@@ -67,7 +72,7 @@ func TestCreateUser_Success(t *testing.T) {
 		t.Fatalf("unexpected error %v", err)
 	}
 
-	if !mockUserRepository.Called {
+	if !mockUserRepository.CreateUserCalled {
 		t.Errorf("expected CreateUser to be called")
 	}
 
@@ -93,7 +98,7 @@ func TestCreateUser_Duplicate(t *testing.T) {
 
 	_, err := service.CreateUser(context.Background(), newUser)
 
-	if !mockUserRepository.Called {
+	if !mockUserRepository.CreateUserCalled {
 		t.Errorf("expected CreateUser to be called")
 	}
 
@@ -134,7 +139,7 @@ func TestGetUser_Success(t *testing.T) {
 		t.Fatalf("unexpected erro %v", err)
 	}
 
-	if !mockUserRepository.Called {
+	if !mockUserRepository.GetUserCalled {
 		t.Errorf("expected GetUser to be called")
 	}
 
@@ -159,7 +164,7 @@ func TestGetUser_UserNotFound(t *testing.T) {
 		t.Fatalf("expected error, got nil")
 	}
 
-	if !mockUserRepository.Called {
+	if !mockUserRepository.GetUserCalled {
 		t.Errorf("expected GetUser to be called")
 	}
 
@@ -207,7 +212,7 @@ func TestGetAllUsers_ShouldReturnUsers_WhenRepositorySucceeds(t *testing.T) {
 		t.Fatalf("unexpected erro %v", err)
 	}
 
-	if !mockUserRepository.Called {
+	if !mockUserRepository.GetAllUsersCalled {
 		t.Errorf("expected GetAllUsers to be called")
 	}
 
