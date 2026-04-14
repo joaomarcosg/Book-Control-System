@@ -228,13 +228,13 @@ func TestGetAllUsers_ShouldReturnUsers_WhenRepositorySucceeds(t *testing.T) {
 	}
 }
 
-func TestGetAllUsers_ShouldReturnError_WhenUsersNotFound(t *testing.T) {
+func TestGetAllUsers_ShouldReturnEmptyList_WhenUsersNotFound(t *testing.T) {
 	mockUserRepository := &MockUserRepository{
 		GetAllUsersFn: func(ctx context.Context) ([]*models.User, error) {
 			if ctx == nil {
 				t.Error("expected non-nil context")
 			}
-			return nil, repositories.ErrUnregisteredUsers
+			return []*models.User{}, nil
 		},
 	}
 
@@ -242,16 +242,16 @@ func TestGetAllUsers_ShouldReturnError_WhenUsersNotFound(t *testing.T) {
 
 	users, err := service.GetAllUsers(context.Background())
 
-	if err == nil {
-		t.Fatalf("expected error, got nil")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if !errors.Is(err, repositories.ErrUnregisteredUsers) {
-		t.Fatalf("expected ErrUnRegisteredUsers, got %v", err)
+	if users == nil {
+		t.Fatalf("expected empty slice, got nil")
 	}
 
-	if users != nil {
-		t.Fatalf("expected nil users when error occurs, got %v", users)
+	if len(users) != 0 {
+		t.Fatalf("expected empty list, got %v", users)
 	}
 
 	if !mockUserRepository.GetAllUsersCalled {
