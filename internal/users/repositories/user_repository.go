@@ -10,7 +10,6 @@ import (
 var (
 	ErrDuplicateUserNameOrEmail = errors.New("user email already exists")
 	ErrUserNotFound             = errors.New("user not found")
-	ErrUnregisteredUsers        = errors.New("there are no registered users")
 )
 
 type UserRepository interface {
