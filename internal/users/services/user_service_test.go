@@ -83,7 +83,7 @@ func TestCreateUser_Success(t *testing.T) {
 	}
 
 	if id != expectedID {
-		t.Fatalf("expected %v, got %v", expectedID, id)
+		t.Errorf("expected %v, got %v", expectedID, id)
 	}
 }
 
@@ -103,6 +103,10 @@ func TestCreateUser_Duplicate(t *testing.T) {
 	}
 
 	_, err := service.CreateUser(context.Background(), newUser)
+
+	if err == nil {
+		t.Fatalf("expected error, got nil")
+	}
 
 	if !mockUserRepository.CreateUserCalled {
 		t.Errorf("expected CreateUser to be called")
@@ -127,13 +131,10 @@ func TestGetUser_Success(t *testing.T) {
 
 	mockUserRepository := &MockUserRepository{
 		GetUserFn: func(ctx context.Context, id int64) (*models.User, error) {
-			return &models.User{
-				ID:        expectedUser.ID,
-				Name:      expectedUser.Name,
-				Email:     expectedUser.Email,
-				CreatedAt: expectedUser.CreatedAt,
-				UpdatedAt: expectedUser.UpdatedAt,
-			}, nil
+			if id != 1 {
+				t.Errorf("expected id 1, got %v", id)
+			}
+			return expectedUser, nil
 		},
 	}
 
@@ -179,7 +180,7 @@ func TestGetUser_UserNotFound(t *testing.T) {
 	}
 
 	if user != nil {
-		t.Fatalf("expected nil, got %v", user)
+		t.Fatalf("expected nil user when error occurs, got %v", user)
 	}
 
 }
