@@ -54,7 +54,7 @@ func (u *userRepository) GetAllUsers(ctx context.Context) ([]*models.User, error
 	users, err := u.queries.GetAllUsers(ctx)
 
 	if err != nil {
-		return nil, err
+		return []*models.User{}, err
 	}
 
 	return toDomainList(users), nil
