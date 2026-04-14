@@ -49,6 +49,10 @@ func (u *UserService) GetAllUsers(ctx context.Context) ([]*models.User, error) {
 		return nil, err
 	}
 
+	if users == nil {
+		return []*models.User{}, nil
+	}
+
 	return users, nil
 
 }
