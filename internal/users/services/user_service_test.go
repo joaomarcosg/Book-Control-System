@@ -55,6 +55,12 @@ func TestCreateUser_Success(t *testing.T) {
 
 	mockUserRepository := &MockUserRepository{
 		CreateUserFn: func(ctx context.Context, user *models.User) (int64, error) {
+			if user.Name != "John Doe" {
+				t.Errorf("unexpected user name: %v", user.Name)
+			}
+			if user.Email != "johndoe@email.com" {
+				t.Errorf("unexpected user email: %v", user.Email)
+			}
 			return int64(expectedID), nil
 		},
 	}
