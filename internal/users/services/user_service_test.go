@@ -227,3 +227,35 @@ func TestGetAllUsers_ShouldReturnUsers_WhenRepositorySucceeds(t *testing.T) {
 		t.Errorf("expected %v, got %v", expectedUsers, users)
 	}
 }
+
+func TestGetAllUsers_ShouldReturnError_WhenUsersNotFound(t *testing.T) {
+	mockUserRepository := &MockUserRepository{
+		GetAllUsersFn: func(ctx context.Context) ([]*models.User, error) {
+			if ctx == nil {
+				t.Error("expected non-nil context")
+			}
+			return nil, repositories.ErrUnregisteredUsers
+		},
+	}
+
+	service := NewUserService(mockUserRepository)
+
+	users, err := service.GetAllUsers(context.Background())
+
+	if err == nil {
+		t.Fatalf("expected error, got nil")
+	}
+
+	if !errors.Is(err, repositories.ErrUnregisteredUsers) {
+		t.Fatalf("expected ErrUnRegisteredUsers, got %v", err)
+	}
+
+	if users != nil {
+		t.Fatalf("expected nil users when error occurs, got %v", users)
+	}
+
+	if !mockUserRepository.GetAllUsersCalled {
+		t.Errorf("expected GetAllUsers to be called")
+	}
+
+}
