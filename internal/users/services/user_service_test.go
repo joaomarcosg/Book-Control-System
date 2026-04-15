@@ -295,6 +295,39 @@ func TestUpdateUser_ShouldUpdateUser_WhenDataIsValid(t *testing.T) {
 	}
 
 	if !mockUserRepository.UpdateUserCalled {
-		t.Errorf("expected UpdateUser to be called")
+		t.Error("expected UpdateUser to be called")
 	}
+}
+
+func TestUpdateUser_ShouldReturnUserNotFoundError_WhenUserNotFound(t *testing.T) {
+
+	var id int64 = 1
+
+	updatedUser := &models.User{
+		Name:  "John Doe",
+		Email: "john.doe@email.com",
+	}
+
+	mockUserRepository := &MockUserRepository{
+		UpdateUserFn: func(ctx context.Context, id int64, user *models.User) error {
+			return repositories.ErrUserNotFound
+		},
+	}
+
+	service := NewUserService(mockUserRepository)
+
+	err := service.UpdateUser(context.Background(), id, updatedUser)
+
+	if err == nil {
+		t.Fatalf("expected error, got nil")
+	}
+
+	if !errors.Is(err, repositories.ErrUserNotFound) {
+		t.Fatalf("expected ErrUserNotFound, got %v", err)
+	}
+
+	if !mockUserRepository.UpdateUserCalled {
+		t.Error("expected UpdateUser to be called")
+	}
+
 }
