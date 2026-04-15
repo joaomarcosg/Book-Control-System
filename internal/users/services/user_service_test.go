@@ -50,7 +50,7 @@ func (m *MockUserRepository) DeleteUser(ctx context.Context, id int64) error {
 	return m.DeleteUserFn(ctx, id)
 }
 
-func TestCreateUser_Success(t *testing.T) {
+func TestCreateUser_ShouldCreateUser_WhenDataIsValid(t *testing.T) {
 	var expectedID int64 = 1
 
 	mockUserRepository := &MockUserRepository{
@@ -87,7 +87,7 @@ func TestCreateUser_Success(t *testing.T) {
 	}
 }
 
-func TestCreateUser_Duplicate(t *testing.T) {
+func TestCreateUser_ShouldReturnDuplicateUserError_WhenUserAlreadyExists(t *testing.T) {
 
 	mockUserRepository := &MockUserRepository{
 		CreateUserFn: func(ctx context.Context, user *models.User) (int64, error) {
@@ -118,7 +118,7 @@ func TestCreateUser_Duplicate(t *testing.T) {
 
 }
 
-func TestGetUser_Success(t *testing.T) {
+func TestGetUser_ShouldReturnUser_WhenUserIdIsValid(t *testing.T) {
 	fixedTime := time.Date(2026, 4, 12, 14, 0, 0, 0, time.UTC)
 
 	expectedUser := &models.User{
@@ -155,7 +155,7 @@ func TestGetUser_Success(t *testing.T) {
 	}
 }
 
-func TestGetUser_UserNotFound(t *testing.T) {
+func TestGetUser_ShouldRetornUserNotFoundError_WhenUserIsNotFound(t *testing.T) {
 	var id int64 = 1
 	mockUserRepository := &MockUserRepository{
 		GetUserFn: func(ctx context.Context, id int64) (*models.User, error) {
