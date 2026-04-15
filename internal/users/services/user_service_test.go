@@ -259,3 +259,42 @@ func TestGetAllUsers_ShouldReturnEmptyList_WhenUsersNotFound(t *testing.T) {
 	}
 
 }
+
+func TestUpdateUser_ShouldUpdateUser_WhenDataIsValid(t *testing.T) {
+	var id int64 = 1
+
+	updatedUser := &models.User{
+		Name:  "John Doe",
+		Email: "john.doe@email.com",
+	}
+
+	mockUserRepository := &MockUserRepository{
+		UpdateUserFn: func(ctx context.Context, receivedID int64, user *models.User) error {
+			if ctx == nil {
+				t.Error("expected non-nil context")
+			}
+			if receivedID != id {
+				t.Errorf("expected id %v, got %v", id, receivedID)
+			}
+			if user.Name != updatedUser.Name {
+				t.Errorf("expected name %v, got %v", updatedUser.Name, user.Name)
+			}
+			if user.Email != updatedUser.Email {
+				t.Errorf("expected email %v, got %v", updatedUser.Email, user.Email)
+			}
+			return nil
+		},
+	}
+
+	service := NewUserService(mockUserRepository)
+
+	err := service.UpdateUser(context.Background(), id, updatedUser)
+
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+
+	if !mockUserRepository.UpdateUserCalled {
+		t.Errorf("expected UpdateUser to be called")
+	}
+}
