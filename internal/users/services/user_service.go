@@ -70,5 +70,13 @@ func (u *UserService) UpdateUser(ctx context.Context, id int64, user *models.Use
 }
 
 func (u *UserService) DeleteUser(ctx context.Context, id int64) error {
-	panic("unimplemented")
+
+	err := u.userRepo.DeleteUser(ctx, id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
