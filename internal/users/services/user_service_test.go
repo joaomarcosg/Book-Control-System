@@ -359,3 +359,31 @@ func TestDeleteUser_ShouldDeleteUser_WhenDataIsValid(t *testing.T) {
 		t.Error("expected DeleteUser to be called")
 	}
 }
+
+func TestDeleteUser_ShouldReturnUserNotFoundError_WhenUserNotFound(t *testing.T) {
+
+	var id int64 = 1
+
+	mockUserRepository := &MockUserRepository{
+		DeleteUserFn: func(ctx context.Context, id int64) error {
+			return repositories.ErrUserNotFound
+		},
+	}
+
+	service := NewUserService(mockUserRepository)
+
+	err := service.DeleteUser(context.Background(), id)
+
+	if err == nil {
+		t.Fatalf("expected error, got nil")
+	}
+
+	if !errors.Is(err, repositories.ErrUserNotFound) {
+		t.Fatalf("expected ErrUserNotFound, got %v", err)
+	}
+
+	if !mockUserRepository.DeleteUserCalled {
+		t.Error("expected DeleteUser to be called")
+	}
+
+}
