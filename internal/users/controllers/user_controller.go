@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joaomarcosg/Book-Control-System/internal/users/models"
 )
@@ -29,6 +31,21 @@ func (c *UserController) RegisterRoutes(r *gin.Engine) {
 }
 
 func (c *UserController) CreateUser(ctx *gin.Context) {
+	var user models.User
+
+	if err := ctx.ShouldBindJSON(&user); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
+	id, err := c.userService.CreateUser(ctx, &user)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, id)
 
 }
 
