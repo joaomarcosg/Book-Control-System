@@ -331,3 +331,31 @@ func TestUpdateUser_ShouldReturnUserNotFoundError_WhenUserNotFound(t *testing.T)
 	}
 
 }
+
+func TestDeleteUser_ShouldDeleteUser_WhenDataIsValid(t *testing.T) {
+	var id int64 = 1
+
+	mockUserRepository := &MockUserRepository{
+		DeleteUserFn: func(ctx context.Context, receivedID int64) error {
+			if ctx == nil {
+				t.Error("expected non-nil context")
+			}
+			if receivedID != id {
+				t.Errorf("expected id %v, got %v", id, receivedID)
+			}
+			return nil
+		},
+	}
+
+	service := NewUserService(mockUserRepository)
+
+	err := service.DeleteUser(context.Background(), id)
+
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+
+	if !mockUserRepository.DeleteUserCalled {
+		t.Error("expected DeleteUser to be called")
+	}
+}
